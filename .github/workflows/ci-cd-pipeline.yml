@@ -1,1 +1,23 @@
-•”…z@ÃÉaÃÄ@×‰—…“‰•…–•z@@—¤¢ˆz@@@@‚™•ƒˆ…¢z@@@@@@`@”‰•@@—¤““m™…˜¤…¢£z@@@@‚™•ƒˆ…¢z@@@@@@`@”‰•‘–‚¢z@@‚¤‰“„z@@@@™¤•¢`–•z@¤‚¤•£¤`“£…¢£@@@@¢£…—¢z@@@@@@`@•”…z@Ãˆ…ƒ’–¤£@Ã–„…@@@@@@@@¤¢…¢z@ƒ£‰–•¢aƒˆ…ƒ’–¤£|¥ô@@@@@@`@•”…z@×™‰•£@Ä‰™…ƒ£–™¨@@@@@@@@™¤•z@“¢@`“@@@@@@`@•”…z@Ä‰¢—“¨@Ç‰£@å…™¢‰–•@@@@@@@@™¤•z@‡‰£@``¥…™¢‰–•@@@@@@`@•”…z@Â¤‰“„@Ã–”—“…£…„@@@@@@@@™¤•z@…ƒˆ–@Â¤‰“„@Ã–”—“…£…„@â¤ƒƒ…¢¢†¤““¨Z
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cardinfo.txt' # Adjust this to your actual file name if needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Print Directory
+        run: ls -la
+
+      - name: Trigger Jenkins
+        run: |
+          curl -X POST http://<your-jenkins-url>/job/<your-jenkins-job>/buildWithParameters?token=<your-jenkins-token>&filename=cardinfo.txt
+          echo "Triggered Jenkins to issue a new card"
