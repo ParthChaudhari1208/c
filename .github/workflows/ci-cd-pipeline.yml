@@ -2,22 +2,24 @@ name: CI/CD Pipeline
 
 on:
   push:
+    paths:
+      - "cardinfo.txt"  # Trigger only if this file changes
     branches:
       - main
-    paths:
-      - 'cardinfo.txt' # Adjust this to your actual file name if needed
 
 jobs:
-  build:
+  trigger-jenkins:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Print Directory
-        run: ls -la
-
-      - name: Trigger Jenkins
+      - name: Extract Account Number
+        id: extract_number
         run: |
-          curl -X POST http://<your-jenkins-url>/job/<your-jenkins-job>/buildWithParameters?token=<your-jenkins-token>&filename=cardinfo.txt
-          echo "Triggered Jenkins to issue a new card"
+          ACCOUNT_NUMBER=$(tail -n 1 cardinfo.txt) # Get last line from file
+          echo "ACCOUNT_NUMBER=$ACCOUNT_NUMBER" >> $GITHUB_ENV
+
+      - name: Trigger Jenkins Job
+        run: |
+          curl -X POST "http://your-public-ngrok-url/github-webhook/" --user "jenkins_username:jenkins_token" --data-urlencode "message=${ACCOUNT_NUMBER} has issued a new card"
