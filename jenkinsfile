@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ParthChaudhari1208/c.git'
+            }
+        }
+
+        stage('Extract Account Number') {
+            steps {
+                script {
+                    def cardinfo = readFile('cardinfo.txt').trim()
+                    def accountNumber = cardinfo.split('\n').last() // Get the last line (latest account number)
+                    env.ACCOUNT_NUMBER = accountNumber
+                }
+            }
+        }
+
+        stage('Trigger Notification') {
+            steps {
+                script {
+                    echo "${env.ACCOUNT_NUMBER} has issued a new card"
+                }
+            }
+        }
+    }
+}
