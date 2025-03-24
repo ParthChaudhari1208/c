@@ -1,1 +1,25 @@
-•”…z@ÃÉaÃÄ@×‰—…“‰•…–•z@@—¤¢ˆz@@@@‚™•ƒˆ…¢z@@@@@@`@”‰•@@—¤““m™…˜¤…¢£z@@@@‚™•ƒˆ…¢z@@@@@@`@”‰•‘–‚¢z@@‚¤‰“„z@@@@™¤•¢`–•z@¤‚¤•£¤`“£…¢£@@@@¢£…—¢z@@@@@@`@•”…z@Ãˆ…ƒ’–¤£@Ã–„…@@@@@@@@¤¢…¢z@ƒ£‰–•¢aƒˆ…ƒ’–¤£|¥ô@@@@@@`@•”…z@×™‰•£@Ä‰™…ƒ£–™¨@@@@@@@@™¤•z@“¢@`“@@@@@@`@•”…z@Ä‰¢—“¨@Ç‰£@å…™¢‰–•@@@@@@@@™¤•z@‡‰£@``¥…™¢‰–•@@@@@@`@•”…z@Â¤‰“„@Ã–”—“…£…„@@@@@@@@™¤•z@…ƒˆ–@Â¤‰“„@Ã–”—“…£…„@â¤ƒƒ…¢¢†¤““¨Z
+name: CI/CD Pipeline
+
+on:
+  push:
+    paths:
+      - "cardinfo.txt"  # Trigger only if this file changes
+    branches:
+      - main
+
+jobs:
+  trigger-jenkins:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Extract Account Number
+        id: extract_number
+        run: |
+          ACCOUNT_NUMBER=$(tail -n 1 cardinfo.txt) # Get last line from file
+          echo "ACCOUNT_NUMBER=$ACCOUNT_NUMBER" >> $GITHUB_ENV
+
+      - name: Trigger Jenkins Job
+        run: |
+          curl -X POST "http://22a0-103-152-173-251.ngrok-free.app/github-webhook/" --user "parth_1947242359075928377:jenkins_token" --data-urlencode "message=${ACCOUNT_NUMBER} has issued a new card"

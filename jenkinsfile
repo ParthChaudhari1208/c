@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Read Account Number') {
+            steps {
+                script {
+                    // Extract account number (first column) using awk
+                    def accountNumber = sh(script: "awk '{print \$1}' cardinfo.txt | tail -n 1", returnStdout: true).trim()
+                    
+                    // Print the message
+                    echo "Account number ${accountNumber} has issued a new card using Jenkins!"
+                }
+            }
+        }
+    }
+}
