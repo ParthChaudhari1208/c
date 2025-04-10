@@ -92,5 +92,6 @@ SAY '** Card Information successfully saved in ' OUTFILE
 ADDRESS TSO
 SUBMIT "'Z54734.JCL(SSHCMD)'"
 SAY "JCL Submitted Successfully."
+SAY "Commit changes"
 
 EXIT 0
